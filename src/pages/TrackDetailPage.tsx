@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowLeft, Check, Heart, ListPlus, Play } from 'lucide-react'
+import { ArrowLeft, Check, Heart, ListPlus, Play, Plus } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
 
@@ -48,7 +48,7 @@ export default function TrackDetailPage() {
     <div>
       <Link
         to="/tracks"
-        className="mb-6 inline-flex items-center gap-2 text-sm text-zinc-400 transition hover:text-white"
+        className="mb-6 inline-flex items-center gap-2 rounded-lg px-2 py-1 text-sm text-zinc-400 transition hover:bg-zinc-900 hover:text-white"
       >
         <ArrowLeft size={16} /> До каталогу
       </Link>
@@ -101,7 +101,7 @@ export default function TrackDetailPage() {
                   className={`flex cursor-pointer items-center gap-2 rounded-full border px-4 py-3 text-sm font-medium transition ${
                     isFavorite
                       ? 'border-pink-500/50 bg-pink-500/10 text-pink-400 hover:bg-pink-500/20'
-                      : 'border-zinc-700 text-zinc-200 hover:border-zinc-500 hover:text-pink-400'
+                      : 'border-zinc-700 text-zinc-200 hover:border-zinc-500 hover:bg-zinc-900 hover:text-pink-400'
                   }`}
                   onClick={() => toggleFavorite(track.id)}
                 >
@@ -117,17 +117,21 @@ export default function TrackDetailPage() {
                 </p>
 
                 {playlists.length === 0 ? (
-                  <p className="text-sm text-zinc-400">
-                    У тебе ще немає плейлистів.{' '}
-                    <Link to="/playlists" className="text-violet-400 underline hover:text-violet-300">
+                  <div className="flex flex-col items-start gap-3">
+                    <p className="text-sm text-zinc-400">У тебе ще немає створених плейлистів.</p>
+                    <Link
+                      to="/playlists"
+                      className="inline-flex items-center gap-1.5 rounded-xl bg-violet-500/15 px-3.5 py-2 text-sm font-medium text-violet-300 transition hover:bg-violet-500/25 hover:text-white"
+                    >
+                      <Plus size={16} />
                       Створити перший плейлист
                     </Link>
-                  </p>
+                  </div>
                 ) : (
                   <div className="flex flex-col gap-2 sm:flex-row">
                     <select
                       aria-label="Оберіть плейлист"
-                      className="flex-1 cursor-pointer rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-violet-500"
+                      className="flex-1 cursor-pointer rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none transition hover:border-zinc-500 focus:border-violet-500"
                       value={targetPlaylistId}
                       onChange={(event) => {
                         setSelectedPlaylistId(event.target.value)
@@ -145,7 +149,7 @@ export default function TrackDetailPage() {
                       type="button"
                       disabled={isAlreadyInTarget}
                       onClick={handleAddToPlaylist}
-                      className="inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-zinc-800 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-violet-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-violet-400 disabled:cursor-not-allowed disabled:bg-zinc-800 disabled:text-zinc-400"
                     >
                       {isAlreadyInTarget || justAdded ? (
                         <>
@@ -167,7 +171,7 @@ export default function TrackDetailPage() {
                         {index > 0 && ', '}
                         <Link
                           to={`/playlists/${encodeURIComponent(playlist.id)}`}
-                          className="text-violet-400 hover:underline"
+                          className="text-violet-400 transition hover:text-violet-300 hover:underline"
                         >
                           {playlist.name}
                         </Link>
