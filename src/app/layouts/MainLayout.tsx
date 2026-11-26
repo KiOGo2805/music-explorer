@@ -38,18 +38,23 @@ export function MainLayout() {
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
       <header className="border-b border-zinc-800/80 bg-zinc-950/90">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-4">
-          <NavLink to="/tracks" className="flex items-center gap-2 text-lg font-bold tracking-tight">
+          <NavLink
+            to="/tracks"
+            className="flex items-center gap-2 rounded-lg px-2 py-1 text-lg font-bold tracking-tight transition hover:bg-zinc-900 hover:text-violet-300"
+          >
             <Disc3 className="text-violet-400" size={23} />
             Music Explorer
           </NavLink>
-          <nav className="flex items-center gap-1">
+          <nav className="flex items-center gap-1.5">
             {links.map(({ to, label, icon: Icon }) => (
               <NavLink
                 key={to}
                 to={to}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition ${
-                    isActive ? 'bg-zinc-800 text-white' : 'text-zinc-400 hover:text-white'
+                  `flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition ${
+                    isActive
+                      ? 'bg-zinc-800 text-white hover:bg-zinc-700'
+                      : 'text-zinc-400 hover:bg-zinc-900 hover:text-white'
                   }`
                 }
               >
@@ -70,7 +75,7 @@ export function MainLayout() {
           <div className="mx-auto flex max-w-7xl items-center gap-4">
             <Link to={trackHref} aria-label={`Відкрити трек ${activeTrack.title}`} className="shrink-0">
               <img
-                className="h-12 w-12 rounded-md object-cover transition hover:opacity-85"
+                className="h-12 w-12 rounded-md object-cover transition hover:opacity-80"
                 src={activeTrack.artworkUrl}
                 alt=""
                 onError={handleImageError}
@@ -95,6 +100,7 @@ export function MainLayout() {
               )}
             </div>
             <button
+              type="button"
               aria-label={isPlaying ? 'Пауза' : 'Відтворити'}
               className="cursor-pointer rounded-full bg-violet-500 p-2 text-white transition hover:bg-violet-400"
               onClick={togglePlay}
