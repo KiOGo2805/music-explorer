@@ -6,6 +6,7 @@ import { musicRepository } from '@/shared/api/audius.repository'
 import { useLibraryStore } from '@/shared/store/useLibraryStore'
 import { AsyncStateBoundary } from '@/shared/ui/AsyncStateBoundary'
 import { Badge } from '@/shared/ui/Badge'
+import { handleImageError } from '@/shared/ui/imageFallback'
 
 export default function TrackDetailPage() {
   const { trackId = '' } = useParams()
@@ -23,7 +24,12 @@ export default function TrackDetailPage() {
     <AsyncStateBoundary isLoading={query.isLoading} isError={query.isError} onRetry={() => void query.refetch()}>
       {track && (
         <article className="grid gap-8 md:grid-cols-[minmax(240px,380px)_1fr] md:items-center">
-          <img className="aspect-square w-full rounded-3xl object-cover shadow-2xl" src={track.artworkUrl} alt={`Обкладинка: ${track.title}`} />
+          <img
+            className="aspect-square w-full rounded-3xl object-cover shadow-2xl"
+            src={track.artworkUrl}
+            alt={`Обкладинка: ${track.title}`}
+            onError={handleImageError}
+          />
           <div>
             <Badge>Трек</Badge>
             <h1 className="mt-4 text-4xl font-bold">{track.title}</h1>

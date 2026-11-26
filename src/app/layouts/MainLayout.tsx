@@ -3,6 +3,7 @@ import { Disc3, Heart, ListMusic, Music, Pause, Play } from 'lucide-react'
 import { NavLink, Outlet } from 'react-router-dom'
 
 import { useLibraryStore } from '@/shared/store/useLibraryStore'
+import { handleImageError } from '@/shared/ui/imageFallback'
 
 const links = [
   { to: '/tracks', label: 'Каталог', icon: Music },
@@ -62,7 +63,12 @@ export function MainLayout() {
       {activeTrack && (
         <footer className="fixed inset-x-0 bottom-0 z-10 border-t border-zinc-800 bg-zinc-950/95 px-5 py-3 backdrop-blur">
           <div className="mx-auto flex max-w-7xl items-center gap-4">
-            <img className="h-12 w-12 rounded-md object-cover" src={activeTrack.artworkUrl} alt="" />
+            <img
+              className="h-12 w-12 rounded-md object-cover"
+              src={activeTrack.artworkUrl}
+              alt=""
+              onError={handleImageError}
+            />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">{activeTrack.title}</p>
               <p className="truncate text-xs text-zinc-400">{activeTrack.artist.name}</p>

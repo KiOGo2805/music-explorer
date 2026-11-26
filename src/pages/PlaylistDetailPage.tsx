@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useLibraryStore } from '@/shared/store/useLibraryStore'
 import { AsyncStateBoundary } from '@/shared/ui/AsyncStateBoundary'
 import { Badge } from '@/shared/ui/Badge'
+import { handleImageError } from '@/shared/ui/imageFallback'
 
 export default function PlaylistDetailPage() {
   const { playlistId = '' } = useParams()
@@ -51,7 +52,12 @@ export default function PlaylistDetailPage() {
           {playlist.items.map(({ track, addedAt, note }) => (
             <li key={track.id} className="flex items-center gap-4 py-3">
               <button className="rounded-full bg-zinc-800 p-2" aria-label={`Відтворити ${track.title}`} onClick={() => playTrack(track)}>▶</button>
-              <img className="h-12 w-12 rounded-md object-cover" src={track.artworkUrl} alt="" />
+              <img
+                className="h-12 w-12 rounded-md object-cover"
+                src={track.artworkUrl}
+                alt=""
+                onError={handleImageError}
+              />
               <div className="min-w-0 flex-1">
                 <Link to={`/tracks/${encodeURIComponent(track.id)}`} className="truncate font-medium hover:text-violet-300">{track.title}</Link>
                 <p className="text-sm text-zinc-400">{track.artist.name}{note ? ` · ${note}` : ''}</p>

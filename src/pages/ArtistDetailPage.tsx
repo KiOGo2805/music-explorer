@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import { TrackCard } from '@/features/tracks/TrackCard'
 import { musicRepository } from '@/shared/api/audius.repository'
 import { AsyncStateBoundary } from '@/shared/ui/AsyncStateBoundary'
+import { handleImageError } from '@/shared/ui/imageFallback'
 
 export default function ArtistDetailPage() {
   const { artistId = '' } = useParams()
@@ -23,7 +24,12 @@ export default function ArtistDetailPage() {
       {artistQuery.data && (
         <>
           <section className="mb-10 flex items-center gap-6">
-            <img className="h-28 w-28 rounded-full object-cover sm:h-36 sm:w-36" src={artistQuery.data.avatarUrl} alt="" />
+            <img
+              className="h-28 w-28 rounded-full object-cover sm:h-36 sm:w-36"
+              src={artistQuery.data.avatarUrl}
+              alt=""
+              onError={handleImageError}
+            />
             <div>
               <p className="text-sm uppercase tracking-widest text-violet-400">Виконавець</p>
               <h1 className="mt-2 text-3xl font-bold">{artistQuery.data.name}</h1>

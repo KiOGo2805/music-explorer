@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import type { Track } from '@/entities/track/model/types'
 import { useLibraryStore } from '@/shared/store/useLibraryStore'
 import { Badge } from '@/shared/ui/Badge'
+import { handleImageError } from '@/shared/ui/imageFallback'
 
 export function TrackCard({ track }: { track: Track }) {
   const favoriteTrackIds = useLibraryStore((state) => state.favoriteTrackIds)
@@ -20,6 +21,7 @@ export function TrackCard({ track }: { track: Track }) {
             alt={`Обкладинка: ${track.title}`}
             className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
             loading="lazy"
+            onError={handleImageError}
           />
         </Link>
         <button
