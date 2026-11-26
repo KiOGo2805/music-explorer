@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 
@@ -23,13 +24,12 @@ export default function TracksPage() {
   const page = Number.isInteger(rawPage) && rawPage > 0 ? rawPage : 1
 
   const [searchInput, setSearchInput] = useState(qParam)
+  const [prevQParam, setPrevQParam] = useState(qParam)
 
-  useEffect(() => {
-    if (qParam !== searchInput.trim()) {
-      setSearchInput(qParam)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [qParam])
+  if (qParam !== prevQParam) {
+    setPrevQParam(qParam)
+    setSearchInput(qParam)
+  }
 
   useEffect(() => {
     const trimmed = searchInput.trim()
@@ -92,41 +92,55 @@ export default function TracksPage() {
       <section className="mb-6 grid gap-3 sm:grid-cols-[1fr_auto_auto]">
         <input
           aria-label="Пошук треків"
-          className="rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 outline-none placeholder:text-zinc-500 focus:border-violet-500"
+          className="rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 outline-none transition placeholder:text-zinc-500 hover:border-zinc-700 focus:border-violet-500"
           onChange={(event) => setSearchInput(event.target.value)}
           placeholder="Пошук музики…"
           value={searchInput}
         />
-        <select
-          aria-label="Жанр"
-          className="rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3"
-          onChange={(event) => {
-            const nextGenre = event.target.value
-            updateParam('genre', nextGenre === 'All' ? null : nextGenre)
-          }}
-          value={genre}
-        >
-          {MUSIC_GENRES.map((item) => (
-            <option key={item} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
-        <select
-          aria-label="Сортування"
-          className="rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 capitalize"
-          onChange={(event) => {
-            const nextSort = event.target.value
-            updateParam('sort', nextSort === 'trending' ? null : nextSort)
-          }}
-          value={sort}
-        >
-          {SORT_OPTIONS.map((item) => (
-            <option key={item} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
+
+        <div className="relative">
+          <select
+            aria-label="Жанр"
+            className="w-full cursor-pointer appearance-none rounded-xl border border-zinc-800 bg-zinc-900 py-3 pl-4 pr-10 text-zinc-100 outline-none transition hover:border-zinc-700 focus:border-violet-500"
+            onChange={(event) => {
+              const nextGenre = event.target.value
+              updateParam('genre', nextGenre === 'All' ? null : nextGenre)
+            }}
+            value={genre}
+          >
+            {MUSIC_GENRES.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            size={16}
+            className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400"
+          />
+        </div>
+
+        <div className="relative">
+          <select
+            aria-label="Сортування"
+            className="w-full cursor-pointer appearance-none rounded-xl border border-zinc-800 bg-zinc-900 py-3 pl-4 pr-10 capitalize text-zinc-100 outline-none transition hover:border-zinc-700 focus:border-violet-500"
+            onChange={(event) => {
+              const nextSort = event.target.value
+              updateParam('sort', nextSort === 'trending' ? null : nextSort)
+            }}
+            value={sort}
+          >
+            {SORT_OPTIONS.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            size={16}
+            className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400"
+          />
+        </div>
       </section>
 
       <AsyncStateBoundary
