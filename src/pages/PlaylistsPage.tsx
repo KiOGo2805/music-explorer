@@ -53,7 +53,7 @@ export default function PlaylistsPage() {
           Назва
           <input
             autoComplete="off"
-            placeholder="Наприклад: Нічний код"
+            placeholder="Назва плейлиста"
             className="mt-2 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-violet-500"
             {...register('name')}
           />
