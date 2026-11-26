@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowLeft, Check, Heart, ListPlus, Play, Plus } from 'lucide-react'
+import { ArrowLeft, Check, ChevronDown, Heart, ListPlus, Play, Plus } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
 
@@ -129,21 +129,27 @@ export default function TrackDetailPage() {
                   </div>
                 ) : (
                   <div className="flex flex-col gap-2 sm:flex-row">
-                    <select
-                      aria-label="Оберіть плейлист"
-                      className="flex-1 cursor-pointer rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none transition hover:border-zinc-500 focus:border-violet-500"
-                      value={targetPlaylistId}
-                      onChange={(event) => {
-                        setSelectedPlaylistId(event.target.value)
-                        setJustAdded(false)
-                      }}
-                    >
-                      {playlists.map((playlist) => (
-                        <option key={playlist.id} value={playlist.id}>
-                          {playlist.name} ({playlist.items.length})
-                        </option>
-                      ))}
-                    </select>
+                    <div className="relative flex-1">
+                      <select
+                        aria-label="Оберіть плейлист"
+                        className="w-full cursor-pointer appearance-none rounded-xl border border-zinc-700 bg-zinc-950 py-2 pl-3 pr-9 text-sm text-zinc-100 outline-none transition hover:border-zinc-500 focus:border-violet-500"
+                        value={targetPlaylistId}
+                        onChange={(event) => {
+                          setSelectedPlaylistId(event.target.value)
+                          setJustAdded(false)
+                        }}
+                      >
+                        {playlists.map((playlist) => (
+                          <option key={playlist.id} value={playlist.id}>
+                            {playlist.name} ({playlist.items.length})
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown
+                        size={15}
+                        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400"
+                      />
+                    </div>
 
                     <button
                       type="button"

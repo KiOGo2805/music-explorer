@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { Plus } from 'lucide-react'
+import { ChevronDown, Plus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
@@ -52,7 +52,8 @@ export default function PlaylistsPage() {
         <label className="text-sm text-zinc-300">
           Назва
           <input
-            placeholder="Назва плейлиста"
+            autoComplete="off"
+            placeholder="Наприклад: Нічний код"
             className="mt-2 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-violet-500"
             {...register('name')}
           />
@@ -61,22 +62,29 @@ export default function PlaylistsPage() {
 
         <label className="text-sm text-zinc-300">
           Настрій
-          <select
-            className="mt-2 w-full cursor-pointer rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100 outline-none transition hover:border-zinc-500 focus:border-violet-500"
-            {...register('moodTag')}
-          >
-            {(['Focus', 'Workout', 'Chill', 'Party'] as const).map((mood) => (
-              <option key={mood} value={mood}>
-                {mood}
-              </option>
-            ))}
-          </select>
+          <div className="relative mt-2">
+            <select
+              className="w-full cursor-pointer appearance-none rounded-lg border border-zinc-700 bg-zinc-950 py-2 pl-3 pr-10 text-zinc-100 outline-none transition hover:border-zinc-500 focus:border-violet-500"
+              {...register('moodTag')}
+            >
+              {(['Focus', 'Workout', 'Chill', 'Party'] as const).map((mood) => (
+                <option key={mood} value={mood}>
+                  {mood}
+                </option>
+              ))}
+            </select>
+            <ChevronDown
+              size={16}
+              className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400"
+            />
+          </div>
         </label>
 
         <label className="text-sm text-zinc-300 sm:col-span-2">
           Опис
           <input
-            placeholder="Короткий опис підбірки"
+            autoComplete="off"
+            placeholder="Короткий опис підбірки (необов’язково)"
             className="mt-2 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-violet-500"
             {...register('description')}
           />
