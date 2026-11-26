@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Disc3, Heart, ListMusic, Music, Pause, Play } from 'lucide-react'
+import { Disc3, Heart, ListMusic, Music } from 'lucide-react'
 import { Link, NavLink, Outlet } from 'react-router-dom'
 
 import { useLibraryStore } from '@/shared/store/useLibraryStore'
@@ -14,7 +14,6 @@ const links = [
 export function MainLayout() {
   const activeTrack = useLibraryStore((state) => state.activeTrack)
   const isPlaying = useLibraryStore((state) => state.isPlaying)
-  const togglePlay = useLibraryStore((state) => state.togglePlay)
   const setIsPlaying = useLibraryStore((state) => state.setIsPlaying)
   const audioRef = useRef<HTMLAudioElement>(null)
   const streamUrl = activeTrack?.streamUrl
@@ -99,17 +98,9 @@ export function MainLayout() {
                 <p className="truncate text-xs text-zinc-400">{activeTrack.artist.name}</p>
               )}
             </div>
-            <button
-              type="button"
-              aria-label={isPlaying ? 'Пауза' : 'Відтворити'}
-              className="cursor-pointer rounded-full bg-violet-500 p-2 text-white transition hover:bg-violet-400"
-              onClick={togglePlay}
-            >
-              {isPlaying ? <Pause size={18} /> : <Play size={18} />}
-            </button>
             <audio
               ref={audioRef}
-              className="h-10 w-40 sm:w-64"
+              className="h-10 w-48 sm:w-72"
               src={activeTrack.streamUrl}
               controls
               onPlay={() => setIsPlaying(true)}
