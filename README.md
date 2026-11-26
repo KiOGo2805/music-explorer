@@ -25,7 +25,7 @@ npm run preview
 
 ## GitHub Pages
 
-Після публікації застосунок буде доступний за адресою `https://<username>.github.io/<repository>/`. Workflow у `.github/workflows/deploy.yml` перевіряє та збирає застосунок на кожен push до `main`, а потім публікує `dist` у GitHub Pages. У налаштуваннях репозиторію потрібно вибрати GitHub Actions як джерело Pages.
+Після публікації застосунок буде доступний за адресою `https://kiogo2805.github.io/music-explorer/#/tracks`. Workflow у `.github/workflows/deploy.yml` перевіряє та збирає застосунок на кожен push до `main`, а потім публікує `dist` у GitHub Pages. У налаштуваннях репозиторію потрібно вибрати GitHub Actions як джерело Pages.
 
 ## Архітектура feature-first
 

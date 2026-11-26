@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowLeft, Check, ChevronDown, Heart, ListPlus, Play, Plus } from 'lucide-react'
+import { ArrowLeft, Check, ChevronDown, Heart, ListPlus, Pause, Play, Plus } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
 
@@ -23,11 +23,16 @@ export default function TrackDetailPage() {
   const favoriteTrackIds = useLibraryStore((state) => state.favoriteTrackIds)
   const toggleFavorite = useLibraryStore((state) => state.toggleFavorite)
   const playTrack = useLibraryStore((state) => state.playTrack)
+  const togglePlay = useLibraryStore((state) => state.togglePlay)
+  const activeTrack = useLibraryStore((state) => state.activeTrack)
+  const isPlaying = useLibraryStore((state) => state.isPlaying)
   const playlists = useLibraryStore((state) => state.playlists)
   const addTrackToPlaylist = useLibraryStore((state) => state.addTrackToPlaylist)
 
   const track = query.data
   const isFavorite = track ? favoriteTrackIds.includes(track.id) : false
+  const isActiveTrack = track?.id === activeTrack?.id
+  const listenButtonLabel = isActiveTrack ? (isPlaying ? 'Пауза' : 'Продовжити') : 'Слухати'
   const targetPlaylistId = selectedPlaylistId || playlists[0]?.id || ''
   const targetPlaylist = playlists.find((playlist) => playlist.id === targetPlaylistId)
   const isAlreadyInTarget = Boolean(
@@ -90,9 +95,14 @@ export default function TrackDetailPage() {
                 <button
                   type="button"
                   className="flex cursor-pointer items-center gap-2 rounded-full bg-violet-500 px-6 py-3 font-semibold text-white transition hover:bg-violet-400"
-                  onClick={() => playTrack(track)}
+                  onClick={() => (isActiveTrack ? togglePlay() : playTrack(track))}
                 >
-                  <Play size={18} fill="currentColor" /> Слухати
+                  {isActiveTrack && isPlaying ? (
+                    <Pause size={18} fill="currentColor" />
+                  ) : (
+                    <Play size={18} fill="currentColor" />
+                  )}
+                  {listenButtonLabel}
                 </button>
 
                 <button
