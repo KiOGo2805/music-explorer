@@ -204,7 +204,7 @@ export default function PlaylistDetailPage() {
                 </p>
               </div>
               <time className="hidden text-xs text-zinc-500 md:block" dateTime={addedAt}>
-                {new Date(addedAt).toLocaleDateString('uk-UA')}
+                Додано: {new Date(addedAt).toLocaleDateString('uk-UA')}
               </time>
               <button
                 type="button"
