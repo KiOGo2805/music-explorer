@@ -32,6 +32,7 @@ interface AudiusResponse<T> {
 }
 
 const PLACEHOLDER_COVER = './placeholder-cover.svg'
+const APP_NAME = 'MusicExplorer'
 
 function mapTrack(dto: AudiusTrackDto): Track {
   const artist = dto.user
@@ -41,7 +42,7 @@ function mapTrack(dto: AudiusTrackDto): Track {
     genre: dto.genre ?? 'Unknown',
     durationSec: dto.duration ?? 0,
     artworkUrl: dto.artwork?.['480x480'] ?? dto.artwork?.['150x150'] ?? PLACEHOLDER_COVER,
-    streamUrl: `${API_BASE_URL}/tracks/${encodeURIComponent(dto.id)}/stream`,
+    streamUrl: `${API_BASE_URL}/tracks/${encodeURIComponent(dto.id)}/stream?app_name=${APP_NAME}`,
     playCount: dto.play_count ?? 0,
     releaseDate: dto.release_date ?? dto.created_at ?? '',
     artist: {
@@ -66,29 +67,50 @@ function mapArtist(dto: AudiusUserDto): Artist {
 }
 
 function apiUrl(path: string, params?: URLSearchParams): string {
-  const query = params?.toString()
-  return `${API_BASE_URL}${path}${query ? `?${query}` : ''}`
+  const query = new URLSearchParams(params)
+  query.set('app_name', APP_NAME)
+  return `${API_BASE_URL}${path}?${query.toString()}`
+}
+
+function sortTracks(tracks: Track[], sort?: TrackQueryParams['sort']): Track[] {
+  if (sort === 'popular') {
+    return [...tracks].sort((a, b) => b.playCount - a.playCount)
+  }
+  if (sort === 'recent') {
+    return [...tracks].sort((a, b) => b.releaseDate.localeCompare(a.releaseDate))
+  }
+  return tracks
 }
 
 export class AudiusMusicRepository implements IMusicRepository {
   async getTracks(params: TrackQueryParams): Promise<PaginatedTracks> {
+    const trimmedQuery = params.q?.trim() ?? ''
+    const isSearch = trimmedQuery.length > 0
+
     const query = new URLSearchParams({
       limit: String(params.limit),
       offset: String(Math.max(0, params.page - 1) * params.limit),
     })
-    if (params.genre && params.genre !== 'All') query.set('genre', params.genre)
 
-    const endpoint = params.q?.trim()
-      ? '/tracks/search'
-      : `/tracks/${params.sort === 'popular' ? 'popular' : params.sort === 'recent' ? 'recent' : 'trending'}`
-    if (params.q?.trim()) query.set('query', params.q.trim())
+    if (params.genre && params.genre !== 'All') {
+      query.set('genre', params.genre)
+    }
 
+    if (isSearch) {
+      query.set('query', trimmedQuery)
+    } else if (params.sort === 'popular') {
+      query.set('time', 'allTime')
+    }
+
+    const endpoint = isSearch ? '/tracks/search' : '/tracks/trending'
     const response = await fetchJson<AudiusResponse<AudiusTrackDto[]>>(apiUrl(endpoint, query))
-    const items = response.data.map(mapTrack)
+    const mapped = response.data.map(mapTrack)
+    const items = sortTracks(mapped, params.sort)
+
     return {
       items,
       page: params.page,
-      hasMore: items.length === params.limit,
+      hasMore: mapped.length === params.limit,
     }
   }
 
