@@ -52,7 +52,7 @@ export default function PlaylistsPage() {
         <label className="text-sm text-zinc-300">
           Назва
           <input
-            placeholder="Наприклад: Нічний код"
+            placeholder="Назва плейлиста"
             className="mt-2 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-violet-500"
             {...register('name')}
           />
@@ -76,7 +76,7 @@ export default function PlaylistsPage() {
         <label className="text-sm text-zinc-300 sm:col-span-2">
           Опис
           <input
-            placeholder="Короткий опис підбірки (необов’язково)"
+            placeholder="Короткий опис підбірки"
             className="mt-2 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-violet-500"
             {...register('description')}
           />
@@ -100,7 +100,7 @@ export default function PlaylistsPage() {
         isError={false}
         onRetry={() => undefined}
         isEmpty={playlists.length === 0}
-        emptyMessage="Тут з’являться твої плейлисти. Створи перший за допомогою форми вище."
+        emptyMessage="Тут з’являться твої плейлисти."
       >
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {playlists.map((playlist) => (
