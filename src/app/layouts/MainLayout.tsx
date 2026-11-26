@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Disc3, Heart, ListMusic, Music, Pause, Play } from 'lucide-react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet } from 'react-router-dom'
 
 import { useLibraryStore } from '@/shared/store/useLibraryStore'
 import { handleImageError } from '@/shared/ui/imageFallback'
@@ -28,6 +28,11 @@ export function MainLayout() {
       audio.pause()
     }
   }, [streamUrl, isPlaying, setIsPlaying])
+
+  const trackHref = activeTrack ? `/tracks/${encodeURIComponent(activeTrack.id)}` : '/tracks'
+  const artistHref = activeTrack?.artist.id
+    ? `/artists/${encodeURIComponent(activeTrack.artist.id)}`
+    : null
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
@@ -63,19 +68,35 @@ export function MainLayout() {
       {activeTrack && (
         <footer className="fixed inset-x-0 bottom-0 z-10 border-t border-zinc-800 bg-zinc-950/95 px-5 py-3 backdrop-blur">
           <div className="mx-auto flex max-w-7xl items-center gap-4">
-            <img
-              className="h-12 w-12 rounded-md object-cover"
-              src={activeTrack.artworkUrl}
-              alt=""
-              onError={handleImageError}
-            />
+            <Link to={trackHref} aria-label={`Відкрити трек ${activeTrack.title}`} className="shrink-0">
+              <img
+                className="h-12 w-12 rounded-md object-cover transition hover:opacity-85"
+                src={activeTrack.artworkUrl}
+                alt=""
+                onError={handleImageError}
+              />
+            </Link>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium">{activeTrack.title}</p>
-              <p className="truncate text-xs text-zinc-400">{activeTrack.artist.name}</p>
+              <Link
+                to={trackHref}
+                className="block truncate text-sm font-medium transition hover:text-violet-300"
+              >
+                {activeTrack.title}
+              </Link>
+              {artistHref ? (
+                <Link
+                  to={artistHref}
+                  className="block truncate text-xs text-zinc-400 transition hover:text-zinc-200"
+                >
+                  {activeTrack.artist.name}
+                </Link>
+              ) : (
+                <p className="truncate text-xs text-zinc-400">{activeTrack.artist.name}</p>
+              )}
             </div>
             <button
               aria-label={isPlaying ? 'Пауза' : 'Відтворити'}
-              className="rounded-full bg-violet-500 p-2 text-white"
+              className="cursor-pointer rounded-full bg-violet-500 p-2 text-white transition hover:bg-violet-400"
               onClick={togglePlay}
             >
               {isPlaying ? <Pause size={18} /> : <Play size={18} />}
