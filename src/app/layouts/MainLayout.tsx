@@ -1,4 +1,4 @@
-import { useEffect, useRef, Suspense } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import { Disc3, Heart, ListMusic, Music } from 'lucide-react'
 import { Link, NavLink, Outlet } from 'react-router-dom'
 
@@ -14,7 +14,11 @@ const links = [
 export function MainLayout() {
   const activeTrack = useLibraryStore((state) => state.activeTrack)
   const isPlaying = useLibraryStore((state) => state.isPlaying)
+  const volume = useLibraryStore((state) => state.volume)
+  const isMuted = useLibraryStore((state) => state.isMuted)
   const setIsPlaying = useLibraryStore((state) => state.setIsPlaying)
+  const setVolume = useLibraryStore((state) => state.setVolume)
+  const setIsMuted = useLibraryStore((state) => state.setIsMuted)
   const audioRef = useRef<HTMLAudioElement>(null)
   const streamUrl = activeTrack?.streamUrl
 
@@ -27,6 +31,17 @@ export function MainLayout() {
       audio.pause()
     }
   }, [streamUrl, isPlaying, setIsPlaying])
+
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio || !streamUrl) return
+    if (Math.abs(audio.volume - volume) > 0.001) {
+      audio.volume = volume
+    }
+    if (audio.muted !== isMuted) {
+      audio.muted = isMuted
+    }
+  }, [streamUrl, volume, isMuted])
 
   const trackHref = activeTrack ? `/tracks/${encodeURIComponent(activeTrack.id)}` : '/tracks'
   const artistHref = activeTrack?.artist.id
@@ -107,6 +122,10 @@ export function MainLayout() {
               controls
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
+              onVolumeChange={(event) => {
+                setVolume(event.currentTarget.volume)
+                setIsMuted(event.currentTarget.muted)
+              }}
             />
           </div>
         </footer>
