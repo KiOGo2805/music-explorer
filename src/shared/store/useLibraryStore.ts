@@ -9,6 +9,8 @@ interface LibraryState {
   playlists: Playlist[]
   activeTrack: Track | null
   isPlaying: boolean
+  volume: number
+  isMuted: boolean
   toggleFavorite: (trackId: string) => void
   createPlaylist: (input: { name: string; description?: string; moodTag: PlaylistMood }) => string
   updatePlaylist: (playlist: Playlist) => void
@@ -19,6 +21,8 @@ interface LibraryState {
   playTrack: (track: Track) => void
   togglePlay: () => void
   setIsPlaying: (isPlaying: boolean) => void
+  setVolume: (volume: number) => void
+  setIsMuted: (isMuted: boolean) => void
 }
 
 export const useLibraryStore = create<LibraryState>()(
@@ -28,6 +32,8 @@ export const useLibraryStore = create<LibraryState>()(
       playlists: [],
       activeTrack: null,
       isPlaying: false,
+      volume: 0.8,
+      isMuted: false,
       toggleFavorite: (trackId) =>
         set((state) => ({
           favoriteTrackIds: state.favoriteTrackIds.includes(trackId)
@@ -88,6 +94,9 @@ export const useLibraryStore = create<LibraryState>()(
       playTrack: (activeTrack) => set({ activeTrack, isPlaying: true }),
       togglePlay: () => set((state) => ({ isPlaying: !state.isPlaying })),
       setIsPlaying: (isPlaying) => set({ isPlaying }),
+      setVolume: (volume) =>
+        set({ volume: Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : 0.8 }),
+      setIsMuted: (isMuted) => set({ isMuted }),
     }),
     {
       name: 'music-explorer-library-v1',
@@ -96,6 +105,8 @@ export const useLibraryStore = create<LibraryState>()(
         favoriteTrackIds: state.favoriteTrackIds,
         playlists: state.playlists,
         activeTrack: state.activeTrack,
+        volume: state.volume,
+        isMuted: state.isMuted,
       }),
     },
   ),
