@@ -105,7 +105,11 @@ export class AudiusMusicRepository implements IMusicRepository {
     const endpoint = isSearch ? '/tracks/search' : '/tracks/trending'
     const response = await fetchJson<AudiusResponse<AudiusTrackDto[]>>(apiUrl(endpoint, query))
     const mapped = response.data.map(mapTrack)
-    const items = sortTracks(mapped, params.sort)
+    const filtered =
+      isSearch && params.genre && params.genre !== 'All'
+        ? mapped.filter((track) => track.genre.toLowerCase() === params.genre?.toLowerCase())
+        : mapped
+    const items = sortTracks(filtered, params.sort)
 
     return {
       items,

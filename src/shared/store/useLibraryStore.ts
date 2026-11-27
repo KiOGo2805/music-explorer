@@ -96,7 +96,6 @@ export const useLibraryStore = create<LibraryState>()(
         favoriteTrackIds: state.favoriteTrackIds,
         playlists: state.playlists,
         activeTrack: state.activeTrack,
-        isPlaying: state.isPlaying,
       }),
     },
   ),

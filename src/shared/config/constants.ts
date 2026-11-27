@@ -5,9 +5,14 @@ export const PAGE_SIZE = 12
 export const MUSIC_GENRES = [
   'All',
   'Electronic',
-  'Rock',
+  'House',
+  'Bass',
+  'Dubstep',
+  'Techno',
+  'Trap',
   'Hip-Hop/Rap',
   'Pop',
+  'Rock',
   'Ambient',
   'R&B/Soul',
 ] as const
