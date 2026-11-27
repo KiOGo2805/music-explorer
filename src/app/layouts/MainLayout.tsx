@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, Suspense } from 'react'
 import { Disc3, Heart, ListMusic, Music } from 'lucide-react'
 import { Link, NavLink, Outlet } from 'react-router-dom'
 
@@ -66,7 +66,9 @@ export function MainLayout() {
       </header>
 
       <main className={activeTrack ? 'mx-auto max-w-7xl px-5 pb-36 pt-8' : 'mx-auto max-w-7xl px-5 pb-12 pt-8'}>
-        <Outlet />
+        <Suspense fallback={<p className="py-16 text-center text-zinc-400">Завантаження сторінки…</p>}>
+          <Outlet />
+        </Suspense>
       </main>
 
       {activeTrack && (

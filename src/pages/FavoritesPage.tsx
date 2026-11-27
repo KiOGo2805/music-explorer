@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
+import type { Track } from '@/entities/track/model/types'
 import { TrackCard } from '@/features/tracks/TrackCard'
 import { musicRepository } from '@/shared/api/audius.repository'
 import { useLibraryStore } from '@/shared/store/useLibraryStore'
@@ -7,9 +8,17 @@ import { AsyncStateBoundary } from '@/shared/ui/AsyncStateBoundary'
 
 export default function FavoritesPage() {
   const favoriteTrackIds = useLibraryStore((state) => state.favoriteTrackIds)
+
   const query = useQuery({
     queryKey: ['favorite-tracks', favoriteTrackIds],
-    queryFn: () => Promise.all(favoriteTrackIds.map((id) => musicRepository.getTrackById(id))),
+    queryFn: async () => {
+      const results = await Promise.allSettled(
+        favoriteTrackIds.map((id) => musicRepository.getTrackById(id)),
+      )
+      return results
+        .filter((result): result is PromiseFulfilledResult<Track> => result.status === 'fulfilled')
+        .map((result) => result.value)
+    },
   })
 
   return (
@@ -26,7 +35,9 @@ export default function FavoritesPage() {
         emptyMessage="Тут поки немає обраних треків."
       >
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {query.data?.map((track) => <TrackCard key={track.id} track={track} />)}
+          {query.data?.map((track) => (
+            <TrackCard key={track.id} track={track} />
+          ))}
         </div>
       </AsyncStateBoundary>
     </>
